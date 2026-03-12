@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { CurrencyProvider } from "@/components/currency-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,15 +27,17 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <main className="min-h-screen">{children}</main>
-            <Toaster richColors />
+            <CurrencyProvider>
+              <Header />
+              <main className="min-h-screen">{children}</main>
+              <Toaster richColors />
 
-            <footer className="bg-blue-50/50 dark:bg-muted py-12">
-              <div className="container mx-auto px-4 text-center text-muted-foreground">
-                <p>Made with 💗 by Lakshay</p>
-              </div>
-            </footer>
+              <footer className="bg-blue-50/50 dark:bg-muted py-12">
+                <div className="container mx-auto px-4 text-center text-muted-foreground">
+                  <p>Made with 💗 by Lakshay</p>
+                </div>
+              </footer>
+            </CurrencyProvider>
           </ThemeProvider>
         </body>
       </html>

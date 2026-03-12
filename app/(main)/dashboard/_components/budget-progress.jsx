@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Pencil, Check, X } from "lucide-react";
 import useFetch from "@/hooks/use-fetch";
 import { toast } from "sonner";
+import { useCurrency } from "@/components/currency-provider";
 
 import {
   Card,
@@ -18,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { updateBudget } from "@/actions/budget";
 
 export function BudgetProgress({ initialBudget, currentExpenses }) {
+  const { formatAmount } = useCurrency();
   const [isEditing, setIsEditing] = useState(false);
   const [newBudget, setNewBudget] = useState(
     initialBudget?.amount?.toString() || ""
@@ -103,9 +105,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
               <>
                 <CardDescription>
                   {initialBudget
-                    ? `$${currentExpenses.toFixed(
-                        2
-                      )} of $${initialBudget.amount.toFixed(2)} spent`
+                    ? `${formatAmount(currentExpenses)} of ${formatAmount(initialBudget.amount)} spent`
                     : "No budget set"}
                 </CardDescription>
                 <Button

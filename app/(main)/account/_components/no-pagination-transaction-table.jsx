@@ -52,6 +52,7 @@ import { bulkDeleteTransactions } from "@/actions/account";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
+import { useCurrency } from "@/components/currency-provider";
 
 const RECURRING_INTERVALS = {
   DAILY: "Daily",
@@ -61,6 +62,7 @@ const RECURRING_INTERVALS = {
 };
 
 export function NoPaginationTransactionTable({ transactions }) {
+  const { formatAmount } = useCurrency();
   const [selectedIds, setSelectedIds] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     field: "date",
@@ -346,8 +348,8 @@ export function NoPaginationTransactionTable({ transactions }) {
                         : "text-green-500"
                     )}
                   >
-                    {transaction.type === "EXPENSE" ? "-" : "+"}$
-                    {transaction.amount.toFixed(2)}
+                    {transaction.type === "EXPENSE" ? "-" : "+"}
+                    {formatAmount(transaction.amount)}
                   </TableCell>
                   <TableCell>
                     {transaction.isRecurring ? (

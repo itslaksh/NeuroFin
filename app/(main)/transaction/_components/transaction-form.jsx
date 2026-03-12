@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 import { createTransaction, updateTransaction } from "@/actions/transaction";
 import { transactionSchema } from "@/app/lib/schema";
 import { ReceiptScanner } from "./recipt-scanner";
+import { useCurrency } from "@/components/currency-provider";
 
 export function AddTransactionForm({
   accounts,
@@ -40,6 +41,7 @@ export function AddTransactionForm({
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+  const { formatAmount } = useCurrency();
 
   const {
     register,
@@ -102,7 +104,16 @@ export function AddTransactionForm({
         setValue("description", scannedData.description);
       }
       if (scannedData.category) {
-        setValue("category", scannedData.category);
+        // Map AI-returned category name to category ID
+        const matchedCategory = categories.find(
+          (cat) =>
+            cat.name.toLowerCase() === scannedData.category.toLowerCase()
+        );
+        if (matchedCategory) {
+          // Also set the type to match the category's type (EXPENSE/INCOME)
+          setValue("type", matchedCategory.type);
+          setValue("category", matchedCategory.id);
+        }
       }
       toast.success("Receipt scanned successfully");
     }
@@ -123,6 +134,7 @@ export function AddTransactionForm({
   const type = watch("type");
   const isRecurring = watch("isRecurring");
   const date = watch("date");
+  const selectedCategory = watch("category");
 
   const filteredCategories = categories.filter(
     (category) => category.type === type
@@ -138,7 +150,7 @@ export function AddTransactionForm({
         <label className="text-sm font-medium">Type</label>
         <Select
           onValueChange={(value) => setValue("type", value)}
-          defaultValue={type}
+          value={type}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select type" />
@@ -180,7 +192,7 @@ export function AddTransactionForm({
             <SelectContent>
               {accounts.map((account) => (
                 <SelectItem key={account.id} value={account.id}>
-                  {account.name} (${parseFloat(account.balance).toFixed(2)})
+                  {account.name} ({formatAmount(parseFloat(account.balance))})
                 </SelectItem>
               ))}
               <CreateAccountDrawer>
@@ -204,7 +216,7 @@ export function AddTransactionForm({
         <label className="text-sm font-medium">Category</label>
         <Select
           onValueChange={(value) => setValue("category", value)}
-          defaultValue={getValues("category")}
+          value={selectedCategory || ""}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />

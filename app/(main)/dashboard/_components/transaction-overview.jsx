@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useCurrency } from "@/components/currency-provider";
 
 const COLORS = [
   "#FF6B6B",
@@ -33,6 +34,7 @@ const COLORS = [
 ];
 
 export function DashboardOverview({ accounts, transactions }) {
+  const { formatAmount } = useCurrency();
   const [selectedAccountId, setSelectedAccountId] = useState(
     accounts.find((a) => a.isDefault)?.id || accounts[0]?.id
   );
@@ -134,7 +136,7 @@ export function DashboardOverview({ accounts, transactions }) {
                       ) : (
                         <ArrowUpRight className="mr-1 h-4 w-4" />
                       )}
-                      ${transaction.amount.toFixed(2)}
+                      {formatAmount(transaction.amount)}
                     </div>
                   </div>
                 </div>
@@ -167,7 +169,7 @@ export function DashboardOverview({ accounts, transactions }) {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                    label={({ name, value }) => `${name}: ${formatAmount(value)}`}
                   >
                     {pieChartData.map((entry, index) => (
                       <Cell
@@ -177,7 +179,7 @@ export function DashboardOverview({ accounts, transactions }) {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => `$${value.toFixed(2)}`}
+                    formatter={(value) => formatAmount(value)}
                     contentStyle={{
                       backgroundColor: "hsl(var(--popover))",
                       border: "1px solid hsl(var(--border))",

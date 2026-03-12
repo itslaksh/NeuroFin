@@ -15,8 +15,10 @@ import {
 import Link from "next/link";
 import { updateDefaultAccount } from "@/actions/account";
 import { toast } from "sonner";
+import { useCurrency } from "@/components/currency-provider";
 
 export function AccountCard({ account }) {
+  const { formatAmount } = useCurrency();
   const { name, type, balance, id, isDefault } = account;
 
   const {
@@ -64,7 +66,7 @@ export function AccountCard({ account }) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            ${parseFloat(balance).toFixed(2)}
+            {formatAmount(parseFloat(balance))}
           </div>
           <p className="text-xs text-muted-foreground">
             {type.charAt(0) + type.slice(1).toLowerCase()} Account

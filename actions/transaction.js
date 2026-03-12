@@ -242,16 +242,16 @@ export async function scanReceipt(file) {
       - Total amount (just the number)
       - Date (in ISO format)
       - Description or items purchased (brief summary)
+      - Suggested category (one of: Housing, Transportation, Groceries, Utilities, Entertainment, Food, Shopping, Healthcare, Education, Personal Care, Travel, Insurance, Gifts & Donations, Bills & Fees, Other Expenses)
       - Merchant/store name
-      - Suggested category (one of: housing,transportation,groceries,utilities,entertainment,food,shopping,healthcare,education,personal,travel,insurance,gifts,bills,other-expense )
       
       Only respond with valid JSON in this exact format:
       {
         "amount": number,
         "date": "ISO date string",
         "description": "string",
-        "merchantName": "string",
         "category": "string"
+        "merchantName": "string",
       }
 
       If its not a recipt, return an empty object
